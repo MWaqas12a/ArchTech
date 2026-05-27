@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My To-Do List</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="card">
+  <h1>📝 My To-Do List</h1>
+
+  <!-- Input -->
+  <div class="input-row">
+    <input type="text" id="task-input" placeholder="Add a new task…" />
+    <button class="btn-add" onclick="addTask()">+ Add</button>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="filter-tabs">
+    <button class="tab active" id="tab-all"    onclick="setFilter('all')">📋 All</button>
+    <button class="tab"        id="tab-active" onclick="setFilter('active')">⏳ Active</button>
+    <button class="tab"        id="tab-done"   onclick="setFilter('done')">✅ Done</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div>Total: <b id="stat-total">0</b></div>
+    <div>Active: <b id="stat-active">0</b></div>
+    <div>Done: <b id="stat-done">0</b></div>
+  </div>
+
+  <!-- Task list -->
+  <ul id="task-list"></ul>
+  <p id="empty-msg">No tasks here!</p>
+</div>
+
+<!-- Delete warning popup -->
+<div class="overlay" id="overlay">
+  <div class="popup">
+    <div class="warn-icon">⚠️</div>
+    <h3>Delete this task?</h3>
+    <p>This cannot be undone.</p>
+    <div class="popup-btns">
+      <button class="btn-cancel" onclick="closePopup()">Cancel</button>
+      <button class="btn-delete-confirm" onclick="confirmDelete()">🗑️ Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  // Load saved tasks or start empty
+  var tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  var filter = 'all';
+  var deleteIndex = null;
+
+  // Run on page load
+  renderAll();
+
+  // Save to localStorage
+  function save() {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }
+
+  // Switch filter tab
+  function setFilter(f) {
+    filter = f;
+    document.getElementById('tab-all').classList.remove('active');
+    document.getElementById('tab-active').classList.remove('active');
+    document.getElementById('tab-done').classList.remove('active');
+    document.getElementById('tab-' + f).classList.add('active');
+    renderAll();
+  }
+
+  // Add a new task
+  function addTask() {
+    var input = document.getElementById('task-input');
+    var text  = input.value.trim();
+    if (text === '') {
+      alert('Please type a task first!');
+      return;
+    }
+    tasks.push({ text: text, done: false });
+    save();
+    renderAll();
+    input.value = '';
+    input.focus();
+  }
+
+  // Press Enter to add
+  document.getElementById('task-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') addTask();
+  });
+
+  // Toggle done / active
+  function toggleDone(index) {
+    tasks[index].done = !tasks[index].done;
+    save();
+    renderAll();
+  }
+
+  // Open delete popup
+  function openPopup(index) {
+    deleteIndex = index;
+    document.getElementById('overlay').classList.add('show');
+  }
+
+  // Close delete popup
+  function closePopup() {
+    deleteIndex = null;
+    document.getElementById('overlay').classList.remove('show');
+  }
+
+  // Confirm and delete
+  function confirmDelete() {
+    if (deleteIndex !== null) {
+      tasks.splice(deleteIndex, 1);
+      save();
+      renderAll();
+    }
+    closePopup();
+  }
+
+  // Close popup when clicking outside
+  document.getElementById('overlay').addEventListener('click', function(e) {
+    if (e.target === this) closePopup();
+  });
+
+  // Update stats
+  function updateStats() {
+    var total  = tasks.length;
+    var done   = tasks.filter(function(t) { return t.done; }).length;
+    var active = total - done;
+    document.getElementById('stat-total').textContent  = total;
+    document.getElementById('stat-active').textContent = active;
+    document.getElementById('stat-done').textContent   = done;
+  }
+
+  // Draw all tasks
+  function renderAll() {
+    var list = document.getElementById('task-list');
+    var emptyMsg = document.getElementById('empty-msg');
+    list.innerHTML = '';
+
+    // Filter tasks
+    var filtered = [];
+    for (var i = 0; i < tasks.length; i++) {
+      if (filter === 'all')    filtered.push({ task: tasks[i], index: i });
+      if (filter === 'active' && !tasks[i].done) filtered.push({ task: tasks[i], index: i });
+      if (filter === 'done'   &&  tasks[i].done) filtered.push({ task: tasks[i], index: i });
+    }
+
+    // Show empty message if no tasks
+    emptyMsg.style.display = filtered.length === 0 ? 'block' : 'none';
+
+    // Build each task row
+    for (var j = 0; j < filtered.length; j++) {
+      var task  = filtered[j].task;
+      var index = filtered[j].index;
+
+      var li = document.createElement('li');
+
+      // Circle check button
+      var circleBtn = document.createElement('button');
+      circleBtn.className = 'circle-btn' + (task.done ? ' checked' : '');
+      circleBtn.title = task.done ? 'Mark active' : 'Mark done';
+      circleBtn.textContent = task.done ? '✓' : '';
+      circleBtn.onclick = (function(i) {
+        return function() { toggleDone(i); };
+      })(index);
+
+      // Task text
+      var span = document.createElement('span');
+      span.className = 'task-text' + (task.done ? ' done' : '');
+      span.textContent = task.text;
+
+      // Edit input (hidden)
+      var editInput = document.createElement('input');
+      editInput.className = 'edit-input';
+      editInput.value = task.text;
+
+      // Edit button
+      var btnEdit = document.createElement('button');
+      btnEdit.className = 'btn-action';
+      btnEdit.title = 'Edit';
+      btnEdit.textContent = '✏️';
+
+      // Save button (hidden)
+      var btnSave = document.createElement('button');
+      btnSave.className = 'btn-action';
+      btnSave.title = 'Save';
+      btnSave.textContent = '💾';
+      btnSave.style.display = 'none';
+
+      // Delete button
+      var btnDelete = document.createElement('button');
+      btnDelete.className = 'btn-action';
+      btnDelete.title = 'Delete';
+      btnDelete.textContent = '🗑️';
+
+      // Edit click — show input, hide text
+      btnEdit.onclick = (function(sp, inp, bEdit, bSave) {
+        return function() {
+          sp.style.display = 'none';
+          inp.style.display = 'block';
+          bEdit.style.display = 'none';
+          bSave.style.display = 'inline';
+          inp.focus();
+        };
+      })(span, editInput, btnEdit, btnSave);
+
+      // Save click — update task
+      btnSave.onclick = (function(inp, i) {
+        return function() {
+          var newText = inp.value.trim();
+          if (newText === '') { alert('Task cannot be empty.'); return; }
+          tasks[i].text = newText;
+          save();
+          renderAll();
+        };
+      })(editInput, index);
+
+      // Delete click — show popup
+      btnDelete.onclick = (function(i) {
+        return function() { openPopup(i); };
+      })(index);
+
+      li.appendChild(circleBtn);
+      li.appendChild(span);
+      li.appendChild(editInput);
+      li.appendChild(btnEdit);
+      li.appendChild(btnSave);
+      li.appendChild(btnDelete);
+      list.appendChild(li);
+    }
+
+    updateStats();
+  }
+
+</script>
+</body>
+</html>
