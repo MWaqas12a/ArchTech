@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌐 Social Network Platform</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-share-nodes"></i>
+                <span>Connect</span>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-view="feed">
+                    <i class="fas fa-house"></i> Feed
+                </button>
+                <button class="nav-btn" data-view="profile">
+                    <i class="fas fa-user"></i> Profile
+                </button>
+                <button class="nav-btn" data-view="friends">
+                    <i class="fas fa-user-group"></i> Friends
+                </button>
+                <button class="nav-btn" data-view="notifications">
+                    <i class="fas fa-bell"></i> Notifications
+                    <span class="badge" id="notificationBadge">0</span>
+                </button>
+            </nav>
+            <div class="user-card">
+                <div class="avatar" id="currentUserAvatar">👤</div>
+                <div class="user-info">
+                    <strong id="currentUserName">M Waqas</strong>
+                    <span id="currentUserStatus">Online</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Feed View -->
+            <section id="feedView" class="view active">
+                <div class="feed-header">
+                    <h2><i class="fas fa-rss"></i> Feed</h2>
+                    <button id="newPostBtn" class="btn-primary">
+                        <i class="fas fa-plus"></i> New Post
+                    </button>
+                </div>
+
+                <!-- Create Post -->
+                <div class="create-post" id="createPostArea">
+                    <div class="post-input-area">
+                        <div class="avatar-small">👤</div>
+                        <input type="text" id="postInput" placeholder="What's on your mind?" />
+                    </div>
+                    <div class="post-actions">
+                        <button id="imageUploadBtn" class="btn-outline">
+                            <i class="fas fa-image"></i> Photo
+                        </button>
+                        <button id="submitPostBtn" class="btn-primary">Post</button>
+                    </div>
+                    <input type="file" id="imageUpload" accept="image/*" style="display:none" />
+                </div>
+
+                <!-- Posts Feed -->
+                <div id="postsContainer" class="posts-feed">
+                    <!-- Posts will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Profile View -->
+            <section id="profileView" class="view">
+                <div class="profile-header">
+                    <div class="profile-cover"></div>
+                    <div class="profile-info">
+                        <div class="profile-avatar large">👤</div>
+                        <div class="profile-details">
+                            <h2 id="profileName">M Waqas</h2>
+                            <p id="profileBio">Software Developer | Music Lover</p>
+                            <div class="profile-stats">
+                                <span><strong id="profilePostsCount">0</strong> Posts</span>
+                                <span><strong id="profileFriendsCount">0</strong> Friends</span>
+                            </div>
+                        </div>
+                        <button id="editProfileBtn" class="btn-secondary">
+                            <i class="fas fa-pen"></i> Edit Profile
+                        </button>
+                    </div>
+                </div>
+                <div class="profile-posts" id="profilePosts">
+                    <!-- User's posts will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Friends View -->
+            <section id="friendsView" class="view">
+                <h2><i class="fas fa-user-group"></i> Friends</h2>
+                <div class="friend-requests">
+                    <h3>Friend Requests</h3>
+                    <div id="friendRequestsContainer">
+                        <!-- Friend requests rendered here -->
+                    </div>
+                </div>
+                <div class="friend-list">
+                    <h3>Your Friends</h3>
+                    <div id="friendsListContainer">
+                        <!-- Friends rendered here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notifications View -->
+            <section id="notificationsView" class="view">
+                <h2><i class="fas fa-bell"></i> Notifications</h2>
+                <div id="notificationsContainer">
+                    <!-- Notifications rendered here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Right Sidebar - Online Users -->
+        <aside class="right-sidebar">
+            <h4><i class="fas fa-circle" style="color: #4ade80; font-size: 0.6rem;"></i> Online Friends</h4>
+            <div id="onlineUsersContainer">
+                <!-- Online users rendered here -->
+            </div>
+        </aside>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <h2>Edit Profile</h2>
+            <input type="text" id="editName" placeholder="Full Name" />
+            <input type="text" id="editBio" placeholder="Bio" />
+            <div class="modal-actions">
+                <button id="saveProfileBtn" class="btn-primary">Save</button>
+                <button id="closeModalBtn" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
