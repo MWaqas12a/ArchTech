@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎵 Music Player</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+    <div class="player-card">
+        <h1><i class="fas fa-headphones-simple"></i> music · player</h1>
+
+        <!-- Search + Filter -->
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="🔍 search songs, artists..." />
+            <div class="filter-group">
+                <button class="filter-btn active" data-filter="all"><i class="fas fa-list"></i> All</button>
+                <button class="filter-btn" data-filter="pop"><i class="fas fa-music"></i> Pop</button>
+                <button class="filter-btn" data-filter="rock"><i class="fas fa-guitar"></i> Rock</button>
+                <button class="filter-btn" data-filter="jazz"><i class="fas fa-saxophone"></i> Jazz</button>
+                <button class="filter-btn" data-filter="electronic"><i class="fas fa-wave-square"></i> Electronic</button>
+            </div>
+        </div>
+
+        <!-- Hidden Audio Elements (one per song) -->
+        <div id="audioContainer" style="display:none;">
+            <audio id="audio1" src="musics/Jis_Dil_Wich_Sajnan_Vas_Jaiye___Ustad_Nusrat_Fateh_Ali_Khan___RGH___HD_Video(256k).mp3" preload="metadata"></audio>
+            <audio id="audio2" src="musics/Jattwaad___Harf_Cheema___Gurlez_Akhtar__Official_Song__Punjabi_Songs___GK_Digital___Geet_MP3(256k).mp3" preload="metadata"></audio>
+            <audio id="audio3" src="musics/Je_Tu_Akhiyaan_De_Samne_-__Nusrat_Fateh_Ali_Khan(256k).mp3" preload="metadata"></audio>
+            <audio id="audio4" src="musics/Ranjit_Bawa__Yaari_Chandigarh_Waliye__Lyrical_Video_Song__Mitti_Da_Bawa___Beat_Minister(256k).mp3" preload="metadata"></audio>
+            <audio id="audio5" src="musics/__Jia_Jia_Jia_Ni___bha_lga_ishq__Dil_Suni_Shia_ni_by_Zeeshan_Rokhri_new_song__best_performance(256k).mp3" preload="metadata"></audio>
+            <audio id="audio6" src="musics/_Mere_Dil_Vich_Babbu_Maan____Full_Song_____Pyaas(256k).mp3" preload="metadata"></audio>
+            <audio id="audio7" src="musics/A_Daor_Ni_Wafa_Da_-Basit_Naeemi_New_and_Latest_Saraiki_Punjab_Song_Parformance_2022(256k).mp3" preload="metadata"></audio>
+            <audio id="audio8" src="musics/Afsana_Khan___Bazaar_2__Official_Video__Jithe_Jake_Tu_Bikeya_Himanshi_Khurana_Yuvraj_Hans_New_Hindi(256k).mp3" preload="metadata"></audio>
+            <audio id="audio9" src="musics/Afsana_Khan___Gali_Teri_Se_Pari_Pandher__Official_Video__Gali_Tere_Se___Afsana_Khan_New_Song_2022(256k).mp3" preload="metadata"></audio>
+            <audio id="audio10" src="musics/Sadi_Yaad(256k).mp3" preload="metadata"></audio>
+        </div>
+
+        <!-- Playlist -->
+        <div class="playlist-area" id="playlistContainer"></div>
+
+        <!-- Progress Bar -->
+        <div class="progress-section">
+            <span id="currentTimeDisplay">0:00</span>
+            <input type="range" id="progressSlider" min="0" max="100" value="0" />
+            <span id="totalTimeDisplay">3:30</span>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button id="prevBtn"><i class="fas fa-backward-step"></i></button>
+            <button id="playBtn"><i class="fas fa-play"></i></button>
+            <button id="nextBtn"><i class="fas fa-forward-step"></i></button>
+        </div>
+
+        <!-- Volume -->
+        <div class="volume-row">
+            <i class="fas fa-volume-low"></i>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.8" />
+            <i class="fas fa-volume-high"></i>
+        </div>
+
+        <div class="now-playing" id="nowPlayingDisplay">
+            🎧 now playing: <strong id="currentSongName">—</strong>
+        </div>
+        <div class="footer-note">⏵ playlist · search · categories · progress · volume</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
